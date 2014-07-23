@@ -1,42 +1,34 @@
-#define rep(i,n) for( __typeof(n)i = 0 ; i < n ; i++)
-#define N 8
-
-int dx[] = {  2, 1, -1, -2, -2, -1,  1,  2 };
-int dy[] = {  1, 2,  2,  1, -1, -2, -2, -1 };
-
-int sol[N][N];
-
-bool isValid(int x, int y) {
-    return ( x >= 0 && x < N && y >= 0 && y < N && sol[x][y] == -1 ) ;
+const int MX = 50 ;
+void Print( int x[MX][MX] , int n ){
+    for( int i = 0 ; i < n ; i++ ){
+        for( int j = 0 ; j < n ; j++ ) printf("%4d",x[i][j]);
+        puts("");
+    }
 }
-
-bool back(int x, int y, int Cnt) {
-    if (Cnt == N*N) return true;
-    rep(i,8) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
-        if (isValid(nx, ny)) {
-            sol[nx][ny] = Cnt ;
-            if( back(nx, ny, Cnt+1) ) return true;
-            else sol[nx][ny] = -1; // backtracking
+void Rotate( int m[MX][MX], int n ){
+    for( int layer = 0 ; layer < n /2 ; layer++ ){
+        int first = layer ;
+        int last = n - layer - 1 ;
+        for( int i = first ; i < last ; i++ ){
+            int offset = i - first;
+            int top = m[first][i];
+            m[first][i] = m[last - offset][first];
+            m[last-offset][first] = m[last][last-offset];
+            m[last][last-offset] = m[i][last];
+            m[i][last] = top ;
         }
     }
-    return false;
+    cout << "Final : \n" << endl;
+    Print(m,n);
 }
 
-void printSolution() {
-    rep(i,N) {
-        rep(j,N) printf(" %2d ", sol[i][j]);
-        printf("\n");
-    }
-}
-
-void KnightTour() {
-    memset(sol,-1,sizeof sol);
-    sol[0][0]  = 0;  // Since the Knight is initially at the first block
-    if( back(0, 0, 1) == false) {
-        printf("Solution does not exist");
-        return ;
-    }
-    printSolution();
+int main(){
+    int n ;
+    cin >> n ;
+    int a[MX][MX];
+    for( int i = 0 ; i < n ; i++ ) for( int j = 0 ; j < n ; j++ ) a[i][j] = n*i+j +1;
+    cout << "Initial : \n" << endl;
+    Print(a,n);
+    puts("");
+    Rotate(a,n);
 }
