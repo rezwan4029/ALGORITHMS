@@ -1,34 +1,27 @@
-const int MX = 50 ;
-void Print( int x[MX][MX] , int n ){
-    for( int i = 0 ; i < n ; i++ ){
-        for( int j = 0 ; j < n ; j++ ) printf("%4d",x[i][j]);
-        puts("");
-    }
-}
-void Rotate( int m[MX][MX], int n ){
-    for( int layer = 0 ; layer < n /2 ; layer++ ){
-        int first = layer ;
-        int last = n - layer - 1 ;
-        for( int i = first ; i < last ; i++ ){
-            int offset = i - first;
-            int top = m[first][i];
-            m[first][i] = m[last - offset][first];
-            m[last-offset][first] = m[last][last-offset];
-            m[last][last-offset] = m[i][last];
-            m[i][last] = top ;
-        }
-    }
-    cout << "Final : \n" << endl;
-    Print(m,n);
-}
+#include<iostream>
+using namespace std ;
 
-int main(){
-    int n ;
+const int N = 100 ;
+
+int a[N] , b[N] , n , m , len , L ;
+
+int main() {
+
     cin >> n ;
-    int a[MX][MX];
-    for( int i = 0 ; i < n ; i++ ) for( int j = 0 ; j < n ; j++ ) a[i][j] = n*i+j +1;
-    cout << "Initial : \n" << endl;
-    Print(a,n);
-    puts("");
-    Rotate(a,n);
+    for( int i = 0 ; i < n ; i++ ) cin >> a[i] ;
+    cin >> m ;
+    for( int i = 0 ; i < m ; i++ ) cin >> b[i] ;
+    len = n + m - 1 ;
+    L = n + m ;
+    n--  , m-- ;
+
+    while( len >= 0 ) {
+        if( m < 0 ) a[len] = a[n--];
+        else if( n < 0 ) a[len] = b[m--];
+        else if( a[n] > b[m] ) a[len] = a[n--];
+        else a[len] = b[m--];
+        len--;
+    }
+
+    for( int i = 0 ; i < L ; i++ ) cout << a[i] << " " ;
 }
